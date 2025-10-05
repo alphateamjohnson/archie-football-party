@@ -15,11 +15,11 @@
 
   <style>
     :root{
-      --bg:#0f1117; /* deep charcoal */
-      --card:#151826; /* slightly lighter */
+      --bg:#0f1117;
+      --card:#151826;
       --text:#f6f7fb;
       --muted:#c4c7d1;
-      --accent:#25D366; /* WhatsApp green */
+      --accent:#25D366;
     }
     html,body{height:100%}
     body{
@@ -45,9 +45,13 @@
     }
     .wa-btn:active{ transform: translateY(1px); }
 
+    .sound-tip{ text-align:center; margin-top:10px; color:var(--muted); font-size:14px }
+    .sound-nag{ position: fixed; left:50%; bottom: 24px; transform: translateX(-50%);
+      background:#ffffff; color:#111; padding:12px 16px; border-radius:12px; font-weight:700;
+      box-shadow:0 10px 26px rgba(0,0,0,.35); display:none }
+
     footer{ text-align:center; color:var(--muted); font-size:12px; margin-top:12px; }
 
-    /* Optional subtle confetti layer backdrop (visual only) */
     .confetti-bg{
       position: fixed; inset: 0; pointer-events: none; opacity: .05; background-image:
         radial-gradient(circle at 10% 20%, #fff 1px, transparent 1px),
@@ -66,36 +70,33 @@
       <h1>Archie Johnson Football Party</h1>
       <div class="date">Sunday 26th October</div>
 
-      <!-- Invite video (self-hosted in the repo as invite.mp4) -->
       <div class="video">
-        <video controls autoplay muted playsinline preload="auto" poster="">
+        <video id="vid" loop playsinline preload="auto" poster="">
           <source src="invite.mp4" type="video/mp4" />
           Your browser doesn’t support the video tag.
         </video>
       </div>
 
+      <div class="sound-tip" id="soundTip">If you don’t hear music, tap the video to unmute 🔊</div>
+      <button class="sound-nag" id="soundNag">Tap for sound 🔊</button>
+
       <div class="cta">
-        <a id="waBtn" class="wa-btn" href="#" target="_blank" rel="noopener">📱 RSVP via WhatsApp</a>
+        <a id="waMum" class="wa-btn" href="#" target="_blank" rel="noopener">📱 RSVP via WhatsApp</a>
       </div>
 
-      <footer>Tip: Unmute the video for sound 🔊</footer>
+      <footer>Thanks! See you at FTY Labs Poole ⚽️</footer>
     </div>
   </div>
 
-  <!-- Confetti on load / on RSVP click -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
-    // ---- CONFIG (already filled from your brief) ----
-    const PHONE_NUMBER = '447715200008'; // UK number in international format (no +, no spaces)
+    const MUM_NUMBER = '447715237888';   // from 07715237888
     const MESSAGE = `Archie Johnsons Football Birthday,\nTime from 2pm \nTime To 3:30pm\nlocation: FTY Labs Poole, Retail Park, Unit C1B, Redlands, Poole BH12 1DN\nLet us know if your child has any Dietary requirements \nRespond to this message to confirm you Childs attendance \nParents Welcome to stay….\n\n………………`;
-    // -----------------------------------------------
 
-    // Build WhatsApp link with encoded message
-    const wa = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(MESSAGE)}`;
-    const waBtn = document.getElementById('waBtn');
-    waBtn.href = wa;
+    const waMum = document.getElementById('waMum');
+    const waLink = `https://wa.me/${MUM_NUMBER}?text=${encodeURIComponent(MESSAGE)}`;
+    waMum.href = waLink;
 
-    // Fire confetti on load for ~2 seconds
     function burstConfetti(durationMs=2000){
       const end = Date.now() + durationMs;
       (function frame(){
@@ -105,16 +106,43 @@
       })();
     }
     burstConfetti(2000);
-
-    // More confetti when the RSVP button is clicked
-    waBtn.addEventListener('click', () => {
+    waMum.addEventListener('click', ()=>{
       confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
     });
+
+    const vid = document.getElementById('vid');
+    const soundTip = document.getElementById('soundTip');
+    const soundNag = document.getElementById('soundNag');
+
+    async function tryPlayWithSound(){
+      try{
+        vid.muted = false;
+        await vid.play();
+        soundNag.style.display = 'none';
+      } catch(err){
+        try{
+          vid.muted = true;
+          await vid.play();
+          soundNag.style.display = 'block';
+        }catch(_){
+          soundNag.style.display = 'block';
+        }
+      }
+    }
+
+    tryPlayWithSound();
+
+    function unmute(){
+      vid.muted = false;
+      vid.play().catch(()=>{});
+      soundNag.style.display = 'none';
+    }
+    vid.addEventListener('click', unmute);
+    soundNag.addEventListener('click', unmute);
   </script>
 
-  <!-- Fallback for when JS is disabled -->
   <noscript>
-    <p style="text-align:center"><a href="https://wa.me/447715200008?text=Archie%20Johnsons%20Football%20Birthday%2C%0ATime%20from%202pm%20%0ATime%20To%203%3A30pm%0Alocation%3A%20FTY%20Labs%20Poole%2C%20Retail%20Park%2C%20Unit%20C1B%2C%20Redlands%2C%20Poole%20BH12%201DN%0ALet%20us%20know%20if%20your%20child%20has%20any%20Dietary%20requirements%20%0ARespond%20to%20this%20message%20to%20confirm%20you%20Childs%20attendance%20%0AParents%20Welcome%20to%20stay%E2%80%A6.%0A%0A%E2%80%A6%E2%80%A6%E2%80%A6%E2%80%A6%E2%80%A6%E2%80%A6" class="wa-btn">RSVP via WhatsApp</a></p>
+    <p style="text-align:center"><a href="https://wa.me/447715237888?text=Archie%20Johnsons%20Football%20Birthday%2C%0ATime%20from%202pm%20%0ATime%20To%203%3A30pm%0Alocation%3A%20FTY%20Labs%20Poole%2C%20Retail%20Park%2C%20Unit%20C1B%2C%20Redlands%2C%20Poole%20BH12%201DN%0ALet%20us%20know%20if%20your%20child%20has%20any%20Dietary%20requirements%20%0ARespond%20to%20this%20message%20to%20confirm%20you%20Childs%20attendance%20%0AParents%20Welcome%20to%20stay%E2%80%A6.%0A%0A%E2%80%A6%E2%80%A6%E2%80%A6%E2%80%A6%E2%80%A6%E2%80%A6" class="wa-btn">RSVP via WhatsApp</a></p>
   </noscript>
 </body>
 </html>
