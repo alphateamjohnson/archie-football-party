@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Archie Johnson Football Party</title>
+  <meta name="theme-color" content="#0f1117" />
+  <meta property="og:title" content="Archie Johnson Football Party" />
+  <meta property="og:description" content="You're invited! Watch the video and RSVP via WhatsApp." />
+  
+  <!-- Fun title font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0f1117; /* deep charcoal */
+      --card:#151826; /* slightly lighter */
+      --text:#f6f7fb;
+      --muted:#c4c7d1;
+      --accent:#25D366; /* WhatsApp green */
+    }
+    html,body{height:100%}
+    body{
+      margin:0; background: radial-gradient(1200px 600px at 10% -10%, #1f2340 0%, #0f1117 35%),
+                                 radial-gradient(1200px 600px at 110% 10%, #162037 0%, #0f1117 35%),
+                                 var(--bg);
+      color:var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .wrap{ max-width: 860px; margin: 0 auto; padding: 24px; }
+    .card{ background: var(--card); border-radius: 20px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    h1{ margin: 6px 0 16px; font-family: 'Luckiest Guy', system-ui, sans-serif; letter-spacing: .5px;
+        text-align:center; font-size: clamp(28px, 6vw, 56px); line-height:1.05; }
+    .date{ text-align:center; margin-top:-4px; margin-bottom: 14px; color: var(--muted); font-weight:600; }
+
+    .video{ position:relative; border-radius:16px; overflow:hidden; background:#000; }
+    .video video{ width:100%; display:block; }
+
+    .cta{ display:flex; justify-content:center; margin-top:16px; }
+    .wa-btn{
+      appearance:none; border:0; cursor:pointer; text-decoration:none; color:#111;
+      background: var(--accent); padding: 14px 18px; border-radius: 14px; font-weight: 700;
+      box-shadow: 0 8px 22px rgba(37,211,102,.35); font-size: 16px;
+    }
+    .wa-btn:active{ transform: translateY(1px); }
+
+    footer{ text-align:center; color:var(--muted); font-size:12px; margin-top:12px; }
+
+    /* Optional subtle confetti layer backdrop (visual only) */
+    .confetti-bg{
+      position: fixed; inset: 0; pointer-events: none; opacity: .05; background-image:
+        radial-gradient(circle at 10% 20%, #fff 1px, transparent 1px),
+        radial-gradient(circle at 30% 80%, #fff 1px, transparent 1px),
+        radial-gradient(circle at 60% 30%, #fff 1px, transparent 1px),
+        radial-gradient(circle at 85% 60%, #fff 1px, transparent 1px);
+      background-size: 120px 120px;
+    }
+  </style>
+</head>
+<body>
+  <div class="confetti-bg" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <h1>Archie Johnson Football Party</h1>
+      <div class="date">Sunday 26th October</div>
+
+      <!-- Invite video (self-hosted in the repo as invite.mp4) -->
+      <div class="video">
+        <video controls autoplay muted playsinline preload="auto" poster="">
+          <source src="invite.mp4" type="video/mp4" />
+          Your browser doesn’t support the video tag.
+        </video>
+      </div>
+
+      <div class="cta">
+        <a id="waBtn" class="wa-btn" href="#" target="_blank" rel="noopener">📱 RSVP via WhatsApp</a>
+      </div>
+
+      <footer>Tip: Unmute the video for sound 🔊</footer>
+    </div>
+  </div>
+
+  <!-- Confetti on load / on RSVP click -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>
+    // ---- CONFIG (already filled from your brief) ----
+    const PHONE_NUMBER = '447715200008'; // UK number in international format (no +, no spaces)
+    const MESSAGE = `Archie Johnsons Football Birthday,\nTime from 2pm \nTime To 3:30pm\nlocation: FTY Labs Poole, Retail Park, Unit C1B, Redlands, Poole BH12 1DN\nLet us know if your child has any Dietary requirements \nRespond to this message to confirm you Childs attendance \nParents Welcome to stay….\n\n………………`;
+    // -----------------------------------------------
+
+    // Build WhatsApp link with encoded message
+    const wa = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(MESSAGE)}`;
+    const waBtn = document.getElementById('waBtn');
+    waBtn.href = wa;
+
+    // Fire confetti on load for ~2 seconds
+    function burstConfetti(durationMs=2000){
+      const end = Date.now() + durationMs;
+      (function frame(){
+        confetti({particleCount: 3, angle: 60, spread: 55, origin: {x: 0}});
+        confetti({particleCount: 3, angle: 120, spread: 55, origin: {x: 1}});
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+    }
+    burstConfetti(2000);
+
+    // More confetti when the RSVP button is clicked
+    waBtn.addEventListener('click', () => {
+      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+    });
+  </script>
+
+  <!-- Fallback for when JS is disabled -->
+  <noscript>
+    <p style="text-align:center"><a href="https://wa.me/447715200008?text=Archie%20Johnsons%20Football%20Birthday%2C%0ATime%20from%202pm%20%0ATime%20To%203%3A30pm%0Alocation%3A%20FTY%20Labs%20Poole%2C%20Retail%20Park%2C%20Unit%20C1B%2C%20Redlands%2C%20Poole%20BH12%201DN%0ALet%20us%20know%20if%20your%20child%20has%20any%20Dietary%20requirements%20%0ARespond%20to%20this%20message%20to%20confirm%20you%20Childs%20attendance%20%0AParents%20Welcome%20to%20stay%E2%80%A6.%0A%0A%E2%80%A6%E2%80%A6%E2%80%A6%E2%80%A6%E2%80%A6%E2%80%A6" class="wa-btn">RSVP via WhatsApp</a></p>
+  </noscript>
+</body>
+</html>
